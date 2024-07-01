@@ -6,6 +6,7 @@ import (
 	"os"
 	"path/filepath"
 	"runtime"
+	"strconv"
 	"sync"
 	"time"
 )
@@ -53,19 +54,18 @@ func scanUsingWalkDir(rootDir string) ([]ScannedFile, error) {
 
 // scanUsingGoroutines scans the directory tree rooted at rootDir using concurrent goroutines.
 // It returns a slice of ScannedFile and any error encountered.
-func scanUsingGoroutines(rootDir string, numCPU int) ([]ScannedFile, error) {
+func scanUsingGoroutines(rootDir string, numCPU int, concurrencyMultiplier int) ([]ScannedFile, error) {
 	var result ScanResult
 	var wg sync.WaitGroup
 
-	channelMultiplier := 2
 	if numCPU == 0 {
-		channelMultiplier = 1
+		concurrencyMultiplier = 1
 		numCPU = 1
 	}
 
-	semaphore := make(chan struct{}, numCPU*channelMultiplier) // Buffered channel to limit concurrent goroutines.
-	errChan := make(chan error, 1)                             // Channel to capture errors.
-	doneChan := make(chan struct{})                            // Channel to signal completion.
+	semaphore := make(chan struct{}, numCPU*concurrencyMultiplier) // Buffered channel to limit concurrent goroutines.
+	errChan := make(chan error, 1)                                 // Channel to capture errors.
+	doneChan := make(chan struct{})                                // Channel to signal completion.
 
 	// scanDirectory is a recursive function to scan directories.
 	var scanDirectory func(string)
@@ -195,9 +195,16 @@ func compareScanResults(walkDirFiles, goroutineFiles []ScannedFile) ScanComparis
 // then compares the results and prints a summary.
 func main() {
 	var inputPath string
+	var concurrencyMultiplier int
+
+	// Define the flags
 	flag.StringVar(&inputPath, "path", "", "The path to the projects directory")
+	flag.IntVar(&concurrencyMultiplier, "concurrencyMultiplier", 2, "increase default concurrency from runtime.NumCPU() * 2 to runtime.NumCPU() * concurrencyMultiplier")
+
+	// Parse the flags
 	flag.Parse()
 
+	// Check if the input path is provided
 	if inputPath == "" {
 		fmt.Println("Please provide a path using the -path flag.")
 		return
@@ -215,6 +222,7 @@ func main() {
 
 	numCPU := runtime.NumCPU()
 	for concurrency := 0; concurrency <= numCPU; concurrency++ {
+
 		// Measure WalkDir performance
 		runtime.GC() // Force garbage collection
 		runtime.ReadMemStats(&memStatsBefore)
@@ -232,7 +240,7 @@ func main() {
 		runtime.GC() // Force garbage collection
 		runtime.ReadMemStats(&memStatsBefore)
 		start = time.Now()
-		goroutineFiles, err := scanUsingGoroutines(rootDir, concurrency)
+		goroutineFiles, err := scanUsingGoroutines(rootDir, concurrency, concurrencyMultiplier)
 		if err != nil {
 			fmt.Println("Error:", err)
 			return
@@ -263,10 +271,19 @@ func main() {
 			speedIncreaseGoroutinesRounded = float64(int(speedIncreaseGoroutines*10+0.5)) / 10
 		}
 
-		resultsTable := Table("DarkSimple", "Directory Scan Comparison: "+rootDir)
+		chartTitle := "Test Number: " + strconv.Itoa(concurrency) + " | Directory Scan Comparison: " + rootDir
+		chartConcurrency := strconv.Itoa(concurrency * concurrencyMultiplier)
+
+		if concurrency*concurrencyMultiplier == 0 {
+			chartTitle = "Baseline: No Concurrency | Directory Scan Comparison: " + rootDir
+			chartConcurrency = "N/A"
+		}
+
+		resultsTable := Table("DarkSimple", chartTitle)
 
 		resultsTable.AppendHeader([]interface{}{
 			"Function",
+			"NumCPUs",
 			"Concurrency",
 			"Files",
 			"Directories",
@@ -280,6 +297,7 @@ func main() {
 		resultsTable.AppendRow([]interface{}{
 			"WalkDir",
 			"N/A",
+			"N/A",
 			comparison.TotalWalkDirFiles,
 			comparison.TotalWalkDirDirs,
 			comparison.TotalWalkDirObjects,
@@ -291,7 +309,8 @@ func main() {
 
 		resultsTable.AppendRow([]interface{}{
 			"Concurrent Read",
-			concurrency * 2,
+			numCPU,
+			chartConcurrency,
 			comparison.TotalGoroutineFiles,
 			comparison.TotalGoroutineDirs,
 			comparison.TotalGoroutineObjects,

@@ -15,12 +15,12 @@ To run the code, ensure you have Go installed on your system. You can run the pr
 
 Linux:
 ```sh
-go run . -path="/home/matt/projects"
+go run . -path="/home/matt/projects" -concurrencyMultiplier=1
 ```
 
 Windows:
 ```sh
-go run . -path="C:\Users\Matt\projects"
+go run . -path="C:\Users\Matt\projects" -concurrencyMultiplier=1
 ```
 
 This command compiles and runs the Go program, performing the directory scan and displaying the results.
@@ -61,48 +61,57 @@ By following these instructions, you can easily compile and run the `golangconnc
 
 
  ```
- Directory Scan Comparison: /home/matt/projects
- FUNCTION         CONCURRENCY  FILES  DIRECTORIES  OBJECTS       SIZE   MEMORY  EXECUTION TIME  SPEED INCREASE 
- WalkDir          N/A           2891         1600     4491  181469808  4611752      1.2886646s  1.0x
- Concurrent Read  1             2891         1600     4491  181469808  5589024      719.8068ms  1.8x
+  Baseline: No Concurrency | Directory Scan Comparison: /home/matt/projects
+ FUNCTION         NUMCPUS  CONCURRENCY   FILES  DIRECTORIES  OBJECTS         SIZE     MEMORY  EXECUTION TIME  SPEED INCREASE
+ WalkDir          N/A      N/A          477859        85515   563374  11650846047  482278744    1.754791989s  1.3x
+ Concurrent Read  8        N/A          477859        85515   563374  11650846047  519758552    2.308008297s  1.0x
 
 
- Directory Scan Comparison: /home/matt/projects
- FUNCTION         CONCURRENCY  FILES  DIRECTORIES  OBJECTS       SIZE   MEMORY  EXECUTION TIME  SPEED INCREASE 
- WalkDir          N/A           2891         1600     4491  181469808  4608032      1.2606058s  1.0x
- Concurrent Read  2             2891         1600     4491  181469808  5102952      448.7249ms  2.8x
+ Test Number: 1 | Directory Scan Comparison: /home/matt/projects
+ FUNCTION         NUMCPUS  CONCURRENCY   FILES  DIRECTORIES  OBJECTS         SIZE     MEMORY  EXECUTION TIME  SPEED INCREASE
+ WalkDir          N/A      N/A          477859        85515   563374  11650846047  482193672    1.895348317s  1.2x
+ Concurrent Read  8        1            477859        85515   563374  11650846047  511525136    2.237825253s  1.0x
 
 
- Directory Scan Comparison: /home/matt/projects
- FUNCTION         CONCURRENCY  FILES  DIRECTORIES  OBJECTS       SIZE   MEMORY  EXECUTION TIME  SPEED INCREASE 
- WalkDir          N/A           2891         1600     4491  181469808  4607904      1.2832982s  1.0x
- Concurrent Read  3             2891         1600     4491  181469808  5044456      355.0204ms  3.6x
+ Test Number: 2 | Directory Scan Comparison: /home/matt/projects
+ FUNCTION         NUMCPUS  CONCURRENCY   FILES  DIRECTORIES  OBJECTS         SIZE     MEMORY  EXECUTION TIME  SPEED INCREASE
+ WalkDir          N/A      N/A          477859        85515   563374  11650846047  482159056    1.783704648s  1.0x
+ Concurrent Read  8        2            477859        85515   563374  11650846047  495747136    1.166968233s  1.5x
 
 
- Directory Scan Comparison: /home/matt/projects
- FUNCTION         CONCURRENCY  FILES  DIRECTORIES  OBJECTS       SIZE   MEMORY  EXECUTION TIME  SPEED INCREASE 
- WalkDir          N/A           2891         1600     4491  181469808  4607952      1.2155844s  1.0x
- Concurrent Read  4             2891         1600     4491  181469808  4996160      317.6783ms  3.8x
+ Test Number: 3 | Directory Scan Comparison: /home/matt/projects
+ FUNCTION         NUMCPUS  CONCURRENCY   FILES  DIRECTORIES  OBJECTS         SIZE     MEMORY  EXECUTION TIME  SPEED INCREASE
+ WalkDir          N/A      N/A          477859        85515   563374  11650846047  482210408    1.797338872s  1.0x
+ Concurrent Read  8        3            477859        85515   563374  11650846047  515456544    849.914464ms  2.1x
 
 
- Directory Scan Comparison: /home/matt/projects
- FUNCTION         CONCURRENCY  FILES  DIRECTORIES  OBJECTS       SIZE   MEMORY  EXECUTION TIME  SPEED INCREASE 
- WalkDir          N/A           2891         1600     4491  181469808  4607952      1.2307747s  1.0x
- Concurrent Read  5             2891         1600     4491  181469808  4988968      342.1745ms  3.6x
+ Test Number: 4 | Directory Scan Comparison: /home/matt/projects
+ FUNCTION         NUMCPUS  CONCURRENCY   FILES  DIRECTORIES  OBJECTS         SIZE     MEMORY  EXECUTION TIME  SPEED INCREASE
+ WalkDir          N/A      N/A          477859        85515   563374  11650846047  482200984    1.792817841s  1.0x
+ Concurrent Read  8        4            477859        85515   563374  11650846047  504578416    603.238314ms  3.0x
 
 
- Directory Scan Comparison: /home/matt/projects
- FUNCTION         CONCURRENCY  FILES  DIRECTORIES  OBJECTS       SIZE   MEMORY  EXECUTION TIME  SPEED INCREASE 
- WalkDir          N/A           2891         1600     4491  181469808  4608016      1.2744229s  1.0x
- Concurrent Read  6             2891         1600     4491  181469808  4988664       323.853ms  3.9x
+ Test Number: 5 | Directory Scan Comparison: /home/matt/projects
+ FUNCTION         NUMCPUS  CONCURRENCY   FILES  DIRECTORIES  OBJECTS         SIZE     MEMORY  EXECUTION TIME  SPEED INCREASE
+ WalkDir          N/A      N/A          477859        85515   563374  11650846047  482151680    1.745606908s  1.0x
+ Concurrent Read  8        5            477859        85515   563374  11650846047  520826120     511.29657ms  3.4x
 
- Directory Scan Comparison: /home/matt/projects
- FUNCTION         CONCURRENCY  FILES  DIRECTORIES  OBJECTS       SIZE   MEMORY  EXECUTION TIME  SPEED INCREASE 
- WalkDir          N/A           2891         1600     4491  181469808  4607920      1.3035374s  1.0x
- Concurrent Read  7             2891         1600     4491  181469808  4993080       355.588ms  3.7x
 
- Directory Scan Comparison: /home/matt/projects
- FUNCTION         CONCURRENCY  FILES  DIRECTORIES  OBJECTS       SIZE   MEMORY  EXECUTION TIME  SPEED INCREASE 
- WalkDir          N/A           2891         1600     4491  181469808  4608000      1.2724087s  1.0x
- Concurrent Read  8             2891         1600     4491  181469808  4981288      306.3167ms  4.2x
+ Test Number: 6 | Directory Scan Comparison: /home/matt/projects
+ FUNCTION         NUMCPUS  CONCURRENCY   FILES  DIRECTORIES  OBJECTS         SIZE     MEMORY  EXECUTION TIME  SPEED INCREASE
+ WalkDir          N/A      N/A          477859        85515   563374  11650846047  482210200    1.723066673s  1.0x
+ Concurrent Read  8        6            477859        85515   563374  11650846047  513077144    430.436392ms  4.0x
+
+
+ Test Number: 7 | Directory Scan Comparison: /home/matt/projects
+ FUNCTION         NUMCPUS  CONCURRENCY   FILES  DIRECTORIES  OBJECTS         SIZE     MEMORY  EXECUTION TIME  SPEED INCREASE
+ WalkDir          N/A      N/A          477859        85515   563374  11650846047  482178016    1.775414641s  1.0x
+ Concurrent Read  8        7            477859        85515   563374  11650846047  520799128    397.080972ms  4.5x
+
+
+ Test Number: 8 | Directory Scan Comparison: /home/matt/projects
+ FUNCTION         NUMCPUS  CONCURRENCY   FILES  DIRECTORIES  OBJECTS         SIZE     MEMORY  EXECUTION TIME  SPEED INCREASE
+ WalkDir          N/A      N/A          477859        85515   563374  11650846047  482200984    1.946071665s  1.0x
+ Concurrent Read  8        8            477859        85515   563374  11650846047  520798416    371.251936ms  5.2x
+
  ```
