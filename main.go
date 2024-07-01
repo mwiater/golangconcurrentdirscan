@@ -58,6 +58,7 @@ func scanUsingGoroutines(rootDir string, numCPU int, concurrencyMultiplier int) 
 	var result ScanResult
 	var wg sync.WaitGroup
 
+	// Baseline
 	if numCPU == 0 {
 		concurrencyMultiplier = 1
 		numCPU = 1

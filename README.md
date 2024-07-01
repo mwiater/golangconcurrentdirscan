@@ -15,12 +15,17 @@ To run the code, ensure you have Go installed on your system. You can run the pr
 
 Linux:
 ```sh
-go run . -path="/home/matt/projects" -concurrencyMultiplier=1
+go run . -path="/home/matt/projects"
 ```
 
 Windows:
 ```sh
-go run . -path="C:\Users\Matt\projects" -concurrencyMultiplier=1
+go run . -path="C:\Users\Matt\projects"
+```
+
+Optionally, you can push the concurrency a bit harder. This basically sets the concurrency to `runtime.NumCPU() * concurrencyMultiplier`. This defaults to: 1:
+```sh
+go run . -path="C:\Users\Matt\projects" -concurrencyMultiplier=2
 ```
 
 This command compiles and runs the Go program, performing the directory scan and displaying the results.
@@ -38,7 +43,7 @@ go build -o bin/scan
 This command compiles the Go program and outputs the executable to the `bin` directory with the name `scan`. You can then run the executable using:
 
 ```sh
-./bin/scan
+./bin/scan -path="/home/matt/projects"
 ```
 
 ### Windows
@@ -52,7 +57,7 @@ go build -o bin\scan.exe
 This command compiles the Go program and outputs the executable to the `bin` directory with the name `scan.exe`. Open your command prompt, navigate to the directory containing the `main.go` file, and run the following command:
 
 ```sh
-bin\scan.exe
+bin\scan.exe -path="C:\Users\Matt\projects"
 ```
 
 By following these instructions, you can easily compile and run the `golangconncurentdirscan` program on both Linux and Windows systems, allowing you to compare the performance of sequential and concurrent directory scanning methods.
@@ -61,7 +66,7 @@ By following these instructions, you can easily compile and run the `golangconnc
 
 
  ```
-  Baseline: No Concurrency | Directory Scan Comparison: /home/matt/projects
+ Baseline: No Concurrency | Directory Scan Comparison: /home/matt/projects
  FUNCTION         NUMCPUS  CONCURRENCY   FILES  DIRECTORIES  OBJECTS         SIZE     MEMORY  EXECUTION TIME  SPEED INCREASE
  WalkDir          N/A      N/A          477859        85515   563374  11650846047  482278744    1.754791989s  1.3x
  Concurrent Read  8        N/A          477859        85515   563374  11650846047  519758552    2.308008297s  1.0x
