@@ -1,7 +1,9 @@
 # golangconncurentdirscan
 
 ## Article
-This code is reference for the following Medium article: [Extending Golang’s Standard Packages with Concurrency: Winning Big By Starting Small](https://levelup.gitconnected.com/extending-golangs-standard-packages-with-concurrency-winning-big-by-starting-small-8ba5e5ae163c)
+This code is reference for the following Medium article: [Replacing Golang's Standard Package Functions with Concurrent Functions: Winning Big By Starting Small](https://levelup.gitconnected.com/replacing-golangs-standard-package-functions-with-concurrent-functions-winning-big-by-starting-small-8ba5e5ae163c)
+
+
 
 ## Summary
 
