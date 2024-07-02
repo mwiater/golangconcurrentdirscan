@@ -200,7 +200,7 @@ func main() {
 
 	// Define the flags
 	flag.StringVar(&inputPath, "path", "", "The path to the projects directory")
-	flag.IntVar(&concurrencyMultiplier, "concurrencyMultiplier", 2, "increase default concurrency from runtime.NumCPU() * 2 to runtime.NumCPU() * concurrencyMultiplier")
+	flag.IntVar(&concurrencyMultiplier, "concurrencyMultiplier", 1, "increase default concurrency from runtime.NumCPU() * 2 to runtime.NumCPU() * concurrencyMultiplier")
 
 	// Parse the flags
 	flag.Parse()
